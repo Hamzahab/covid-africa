@@ -45,10 +45,6 @@ public class CovidDataService{
     @Scheduled(cron = "* * 1 * * *")
     public static void getData() throws IOException, InterruptedException{
 
-        // //sends requests and retrieves responses
-        // HttpClient client = HttpClient.newHttpClient();
-        // HttpRequest request = HttpRequest.newBuilder().uri(URI.create(covidStatsURL)).build();
-
         //get response for both african countries data and covidData
         HttpResponse<String> covidStatsResponse = getHTTPResponse(covidStatsURL);
         HttpResponse<String> africanCountriesResponse = getHTTPResponse(africanCountURL);
@@ -80,15 +76,17 @@ public class CovidDataService{
 
     public static List<LocationStats> parseCovidData(HttpResponse<String> response, HashSet<String> africanCountriesList) throws IOException{
         StringReader csvReader = new StringReader(response.body());
+        //stores location stats
         List<LocationStats> currentStats = new ArrayList<LocationStats>();
 
-        //parse all csv data into vars
+        //parse all csv data
         Iterable<CSVRecord> records = CSVFormat.DEFAULT.withFirstRecordAsHeader() .parse(csvReader);
         for (CSVRecord record : records) {
             String provState = record.get("Province/State");
             String countRegion = record.get("Country/Region");
             int currentTotal = Integer.valueOf(record.get(record.size() - 1));
 
+            //check if real row and is an african country
             if(!countRegion.equals("") && africanCountriesList.contains(countRegion)){
                 LocationStats newInst = new LocationStats(provState, countRegion, currentTotal, getTotalCases(record));
 
@@ -103,12 +101,13 @@ public class CovidDataService{
     public static HashSet<String> parseAfricanCountries(HttpResponse<String> response) throws IOException{
         StringReader csvReader = new StringReader(response.body());
         HashSet<String> countries = new HashSet<>();
-        //parse all csv data into vars
+        
+        //parse all csv data
         Iterable<CSVRecord> records = CSVFormat.DEFAULT.withFirstRecordAsHeader() .parse(csvReader);
 
         for (CSVRecord record : records) {
             String continent = record.get("Continent");
-            //if country is africa
+            //if country is africa, save to hashset
             if(continent.equals("Africa")){
                 String country = record.get("Country");
                 countries.add(country);
