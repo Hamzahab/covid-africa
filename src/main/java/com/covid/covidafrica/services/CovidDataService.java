@@ -55,6 +55,7 @@ public class CovidDataService{
        
     }
 
+    //returns total cases
     public static int getTotalCases(CSVRecord record){
         int completeTotal = 0;
         for(int i = 4; i < record.size() ;i++){
@@ -115,4 +116,14 @@ public class CovidDataService{
         }
         return countries;
     }
+
+    public List<LocationStats> getStatsList() {
+        return statsList;
+    }
+
+    public static void setStatsList(List<LocationStats> statsList) {
+        CovidDataService.statsList = statsList;
+    }
+
+    
 }
