@@ -10,6 +10,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 
 */
 @SpringBootApplication
+
 //tells Spring to call scheduled method
 @EnableScheduling
 public class CovidAfricaApplication {

@@ -7,33 +7,38 @@ public class LocationStats {
     private String provRegion;
     private String country;
     private int currentTotal;
-    private int totalAllTime;
-
+    private static int totalCasesInAfrica = 0;
+    private int casesSinceLastWeek;
     
     
     
-    public LocationStats(String provRegion, String country, int currentTotal, int totalAllTime) {
+    public LocationStats(String provRegion, String country, int currentTotal, int casesSinceLastWeek) {
         this.provRegion = provRegion;
         this.country = country;
         this.currentTotal = currentTotal;
-        this.totalAllTime = totalAllTime;
+        this.casesSinceLastWeek = casesSinceLastWeek;
+        totalCasesInAfrica += currentTotal;
     }
 
 
-
-
-    public int getTotalAllTime() {
-        return totalAllTime;
+    public static int getTotalCasesInAfrica() {
+        return totalCasesInAfrica;
     }
 
 
-
-
-    public void setTotalAllTime(int totalAllTime) {
-        this.totalAllTime = totalAllTime;
+    public int getCasesSinceLastWeek() {
+        return casesSinceLastWeek;
     }
 
 
+    public void setCasesSinceLastWeek(int casesSinceLastWeek) {
+        this.casesSinceLastWeek = casesSinceLastWeek;
+    }
+
+
+    public static void setTotalCasesInAfrica(int totalCasesInAfrica) {
+        LocationStats.totalCasesInAfrica = totalCasesInAfrica;
+    }
 
 
     public String getProvRegion() {

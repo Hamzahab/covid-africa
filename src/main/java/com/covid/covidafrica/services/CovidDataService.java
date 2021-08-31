@@ -45,10 +45,6 @@ public class CovidDataService{
     @Scheduled(cron = "* * 1 * * *")
     public static void getData() throws IOException, InterruptedException{
 
-        // //sends requests and retrieves responses
-        // HttpClient client = HttpClient.newHttpClient();
-        // HttpRequest request = HttpRequest.newBuilder().uri(URI.create(covidStatsURL)).build();
-
         //get response for both african countries data and covidData
         HttpResponse<String> covidStatsResponse = getHTTPResponse(covidStatsURL);
         HttpResponse<String> africanCountriesResponse = getHTTPResponse(africanCountURL);
@@ -56,16 +52,12 @@ public class CovidDataService{
         //temporary, will end up populating statsList
         List<LocationStats> currentDayStats = parseCovidData(covidStatsResponse, parseAfricanCountries(africanCountriesResponse));
         statsList = currentDayStats;
+        currentDayStats.get(0);
+        System.out.println(LocationStats.getTotalCasesInAfrica());
        
     }
 
-    public static int getTotalCases(CSVRecord record){
-        int completeTotal = 0;
-        for(int i = 4; i < record.size() ;i++){
-            completeTotal += Integer.valueOf(record.get(i));
-        }
-        return completeTotal;
-    }
+
 
     public static HttpResponse<String> getHTTPResponse(String url) throws IOException, InterruptedException{
 
@@ -80,20 +72,26 @@ public class CovidDataService{
 
     public static List<LocationStats> parseCovidData(HttpResponse<String> response, HashSet<String> africanCountriesList) throws IOException{
         StringReader csvReader = new StringReader(response.body());
+        //stores location stats
         List<LocationStats> currentStats = new ArrayList<LocationStats>();
 
-        //parse all csv data into vars
+        //parse all csv data
         Iterable<CSVRecord> records = CSVFormat.DEFAULT.withFirstRecordAsHeader() .parse(csvReader);
         for (CSVRecord record : records) {
             String provState = record.get("Province/State");
             String countRegion = record.get("Country/Region");
+            //get total cases
             int currentTotal = Integer.valueOf(record.get(record.size() - 1));
 
+            //get active cases from a week before
+            int previousWeekCases = currentTotal - Integer.valueOf(record.get(record.size() - 8));
+
+            //check if real row and is an african country
             if(!countRegion.equals("") && africanCountriesList.contains(countRegion)){
-                LocationStats newInst = new LocationStats(provState, countRegion, currentTotal, getTotalCases(record));
+                LocationStats newInst = new LocationStats(provState, countRegion, currentTotal, previousWeekCases);
 
                 currentStats.add(newInst);
-                System.out.println(newInst.getCountry() + " " + newInst.getCurrentTotal() + " " + newInst.getTotalAllTime());
+                System.out.println(newInst.getCountry() + " " + newInst.getCurrentTotal() + " ");
 
             }
         }
@@ -103,12 +101,13 @@ public class CovidDataService{
     public static HashSet<String> parseAfricanCountries(HttpResponse<String> response) throws IOException{
         StringReader csvReader = new StringReader(response.body());
         HashSet<String> countries = new HashSet<>();
-        //parse all csv data into vars
+        
+        //parse all csv data
         Iterable<CSVRecord> records = CSVFormat.DEFAULT.withFirstRecordAsHeader() .parse(csvReader);
 
         for (CSVRecord record : records) {
             String continent = record.get("Continent");
-            //if country is africa
+            //if country is africa, save to hashset
             if(continent.equals("Africa")){
                 String country = record.get("Country");
                 countries.add(country);
@@ -116,4 +115,14 @@ public class CovidDataService{
         }
         return countries;
     }
+
+    public List<LocationStats> getStatsList() {
+        return statsList;
+    }
+
+    public static void setStatsList(List<LocationStats> statsList) {
+        CovidDataService.statsList = statsList;
+    }
+
+    
 }
