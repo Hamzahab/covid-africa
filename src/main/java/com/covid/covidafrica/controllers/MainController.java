@@ -1,5 +1,9 @@
 package com.covid.covidafrica.controllers;
 
+import java.text.NumberFormat;
+import java.util.Locale;
+
+import com.covid.covidafrica.models.LocationStats;
 import com.covid.covidafrica.services.CovidDataService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,10 +16,14 @@ public class MainController {
 
     @Autowired
     CovidDataService dataInstance;
-
     @GetMapping("/")
     public String home(Model baseModel){
-        baseModel.addAttribute("statsList", "TESTING");
+        NumberFormat format = NumberFormat.getInstance(Locale.US);
+
+        baseModel.addAttribute("statsList", dataInstance.getStatsList());
+        baseModel.addAttribute("totalCases", format.format(LocationStats.getTotalCasesInAfrica()));
+
+
         return "home";
     }
 }

@@ -52,17 +52,12 @@ public class CovidDataService{
         //temporary, will end up populating statsList
         List<LocationStats> currentDayStats = parseCovidData(covidStatsResponse, parseAfricanCountries(africanCountriesResponse));
         statsList = currentDayStats;
+        currentDayStats.get(0);
+        System.out.println(LocationStats.getTotalCasesInAfrica());
        
     }
 
-    //returns total cases
-    public static int getTotalCases(CSVRecord record){
-        int completeTotal = 0;
-        for(int i = 4; i < record.size() ;i++){
-            completeTotal += Integer.valueOf(record.get(i));
-        }
-        return completeTotal;
-    }
+
 
     public static HttpResponse<String> getHTTPResponse(String url) throws IOException, InterruptedException{
 
@@ -85,14 +80,18 @@ public class CovidDataService{
         for (CSVRecord record : records) {
             String provState = record.get("Province/State");
             String countRegion = record.get("Country/Region");
+            //get total cases
             int currentTotal = Integer.valueOf(record.get(record.size() - 1));
+
+            //get active cases from a week before
+            int previousWeekCases = currentTotal - Integer.valueOf(record.get(record.size() - 8));
 
             //check if real row and is an african country
             if(!countRegion.equals("") && africanCountriesList.contains(countRegion)){
-                LocationStats newInst = new LocationStats(provState, countRegion, currentTotal, getTotalCases(record));
+                LocationStats newInst = new LocationStats(provState, countRegion, currentTotal, previousWeekCases);
 
                 currentStats.add(newInst);
-                System.out.println(newInst.getCountry() + " " + newInst.getCurrentTotal() + " " + newInst.getTotalAllTime());
+                System.out.println(newInst.getCountry() + " " + newInst.getCurrentTotal() + " ");
 
             }
         }
