@@ -1,5 +1,5 @@
 # COVID-19 Africa Tracker
-## SpringBoot Application providing COVID-19 data in Africa
+## SpringBoot Application using Thymeleaf providing COVID-19 data in Africa
 ### This application provides active case info for every country in africa, both data from the current day and the difference in case totals from 7 days previous
 
 ### Steps to run
