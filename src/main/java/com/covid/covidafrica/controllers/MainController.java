@@ -22,6 +22,8 @@ public class MainController {
 
         baseModel.addAttribute("statsList", dataInstance.getStatsList());
         baseModel.addAttribute("totalCases", format.format(LocationStats.getTotalCasesInAfrica()));
+        baseModel.addAttribute("countryWithMostCasesRelative", dataInstance.getCountryWithMostRelativeCases());
+
 
 
         return "home";

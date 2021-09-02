@@ -6,20 +6,42 @@ package com.covid.covidafrica.models;
 public class LocationStats {
     private String provRegion;
     private String country;
+
+    private int countryPopulation;
     private int currentTotal;
-    private static int totalCasesInAfrica = 0;
     private int casesSinceLastWeek;
+    private double percentageSick;
+
+    private static int totalCasesInAfrica = 0;
+
     
-    
-    
-    public LocationStats(String provRegion, String country, int currentTotal, int casesSinceLastWeek) {
+    public LocationStats(String provRegion, String country, int currentTotal, int casesSinceLastWeek, Integer countryPopulation) {
         this.provRegion = provRegion;
         this.country = country;
         this.currentTotal = currentTotal;
         this.casesSinceLastWeek = casesSinceLastWeek;
         totalCasesInAfrica += currentTotal;
+        this.countryPopulation = countryPopulation;
+        this.percentageSick = ((double)this.currentTotal/(double)this.countryPopulation)*100;
+        // System.out.println(this.currentTotal + " " +this.countryPopulation + " " + ((double)this.currentTotal/(double)this.countryPopulation)*100);
     }
 
+    public double getPercentageSick() {
+        return percentageSick;
+    }
+
+    public void setPercentageSick(int percentageSick) {
+        this.percentageSick = percentageSick;
+    }
+
+    public int getCountryPopulation() {
+        return countryPopulation;
+    }
+
+
+    public void setCountryPopulation(int countryPopulation) {
+        this.countryPopulation = countryPopulation;
+    }
 
     public static int getTotalCasesInAfrica() {
         return totalCasesInAfrica;
