@@ -4,7 +4,7 @@
     <head>
         <title>COVID-19 Africa Tracker</title>
         <h2>COVID-19 Africa Tracker</h2>
-        <h6>This application provides context to the amount of Active COVID-19 Cases in Africa</h6>
+        <h4>This application provides context to the amount of Active COVID-19 Cases in Africa</h4>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
     
@@ -14,7 +14,10 @@
             background: linear-gradient(90deg, rgba(2,0,36,1) 0%, rgba(200,200,240,1) 0%, rgba(82,58,254,1) 100%);
 
         }
-        
+        h4.country {
+            color: #cf3046;
+        }
+                
         </style>
     
     </head>
@@ -22,8 +25,10 @@
         <div class="row align-items-md-stretch" >
         <div class="h-100 p-5 text-white bg-dark rounded-3">
             <div class="container-fluid py-5">
-            <h1 class="display-5 fw-bold" th:text="${totalCases}"></h1>
-            <p class="col-md-8 fs-4 ">Total Active Cases in Africa</p>
+            <h1 class="display-1 fw-bold" th:text="${totalCases}"></h1>
+            <p class="col-md-8 fs-4 ">Total Active COVID-19 Cases in Africa</p>
+            <br>
+            <h4 class = "country"><small th:text="|Country to watch - ${countryWithMostCasesRelative}|"></small></h4>
             </div>
         </div>
         </div>
@@ -32,11 +37,14 @@
             <th>Country</th>
             <th>Amount of Active Cases</th>
             <th>Active Case Difference in last 7 days</th>
+            <th>Percent of Population with COVID-19 (%)</th>
         </tr>
         <tr th:each="stat: ${statsList}" >
             <td th:text="${stat.country}"></td>
-            <td th:text="${stat.currentTotal} "></td>
-            <td th:text="${stat.casesSinceLastWeek} "></td>
+            <td th:text="${#numbers.formatInteger(stat.currentTotal, 1, 'COMMA')} "></td>
+            <td th:text="${#numbers.formatInteger(stat.casesSinceLastWeek, 1, 'COMMA')} "></td>
+            <td th:text="${#numbers.formatPercent(stat.percentageSick, 1,2)} "></td>
+
         </tr>
         </table>
     </body>
