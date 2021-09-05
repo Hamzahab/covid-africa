@@ -22,7 +22,7 @@ public class LocationStats {
         this.casesSinceLastWeek = casesSinceLastWeek;
         totalCasesInAfrica += currentTotal;
         this.countryPopulation = countryPopulation;
-        this.percentageSick = ((double)this.currentTotal/(double)this.countryPopulation)*100;
+        this.percentageSick = ((double)this.currentTotal/(double)this.countryPopulation);
         // System.out.println(this.currentTotal + " " +this.countryPopulation + " " + ((double)this.currentTotal/(double)this.countryPopulation)*100);
     }
 
