@@ -21,7 +21,7 @@ import org.springframework.stereotype.Service;
 import java.io.StringReader;
 import org.apache.commons.csv.*;
 
-
+//https://developer.okta.com/blog/2019/12/03/spring-boot-deploy-options
 /*
 class will get data from database (given url), and parse for african covid data
 */
